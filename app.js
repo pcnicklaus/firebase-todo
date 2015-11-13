@@ -5,7 +5,7 @@ todomvc.controller('TodoCtrl', function TodoCtrl($scope, $location, $firebase) {
   var fireRef = new Firebase('https://todo-with-pizzaz.firebaseio.com/');
   $scope.todos = $firebase(fireRef).$asArray();
   $scope.newTodo = {};
-  $scope.editedTodo = {};
+  $scope.editedTodo = null;
   $scope.newTodo.schedule = {
        morning : false,
        afternoon : false,
@@ -104,25 +104,25 @@ todomvc.controller('TodoCtrl', function TodoCtrl($scope, $location, $firebase) {
 });
 
 
-// TODO focus and blur directives
-todomvc.directive('todoFocus', function todoFocus($timeout){
-  return function(scope, elem, attrs){
-    scope.$watch(attrs.todoFocus, function(newVal){
-      if (newVal){
-        $timeout(function(){
-          // sets focus to edit input field
-          elem[0].focus();
-        }, 0, false);
-      }
-    });
-  };
-});
+// // TODO focus and blur directives
+// todomvc.directive('todoFocus', function todoFocus($timeout){
+//   return function(scope, elem, attrs){
+//     scope.$watch(attrs.todoFocus, function(newVal){
+//       if (newVal){
+//         $timeout(function(){
+//           // sets focus to edit input field
+//           elem[0].focus();
+//         }, 0, false);
+//       }
+//     });
+//   };
+// });
 
-todomvc.directive('todoBlur', function () {
-  return function (scope, elem, attrs) {
-    elem.bind('blur', function(){
-      // run function we pass in to attribute on blur
-      scope.$apply(attrs.todoBlur);
-    });
-  };
-});
+// todomvc.directive('todoBlur', function () {
+//   return function (scope, elem, attrs) {
+//     elem.bind('blur', function(){
+//       // run function we pass in to attribute on blur
+//       scope.$apply(attrs.todoBlur);
+//     });
+//   };
+// });
