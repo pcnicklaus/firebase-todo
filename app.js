@@ -4,8 +4,13 @@ var todomvc = angular.module('todomvc', ['firebase']);
 todomvc.controller('TodoCtrl', function TodoCtrl($scope, $location, $firebase) {
   var fireRef = new Firebase('https://todo-with-pizzaz.firebaseio.com/');
   $scope.todos = $firebase(fireRef).$asArray();
-  $scope.newTodo = '';
-  $scope.editedTodo = null;
+  $scope.newTodo = {};
+  $scope.editedTodo = {};
+  $scope.newTodo.schedule = {
+       morning : false,
+       afternoon : false,
+       night : false
+     };
 
   $scope.$watch('todos', function(){
     var total = 0;
@@ -22,28 +27,51 @@ todomvc.controller('TodoCtrl', function TodoCtrl($scope, $location, $firebase) {
   }, true);
 
   $scope.addTodo = function(){
-    var newTodo = $scope.newTodo.trim();
-    if (!newTodo.length) {
+    var newTodo = {
+      title: $scope.newTodo.title.trim(),
+      duration: $scope.newTodo.special.trim(),
+      special: $scope.newTodo.special.trim(),
+      schedule: {
+        morning: $scope.newTodo.schedule.morning,
+        afternoon: $scope.newTodo.schedule.afternoon,
+        night: $scope.newTodo.schedule.night
+      }
+    };
+    console.log(newTodo);
+    if (!newTodo) {
       return;
     }
     // push to firebase
     $scope.todos.$add({
-      title: newTodo,
-      completed: false
+      title: newTodo.title,
+      completed: false,
+      duration: newTodo.duration,
+      special: newTodo.special,
+      schedule: {
+        morning: $scope.newTodo.schedule.morning,
+        afternoon: $scope.newTodo.schedule.afternoon,
+        night: $scope.newTodo.schedule.night
+      }
     });
-    $scope.newTodo = '';
+    $scope.newTodo = {};
   };
 
   $scope.editTodo = function(todo){
+    console.log(todo)
+    console.log('firing editTodo');
     $scope.editedTodo = todo;
-    $scope.originalTodo = angular.extend({}, $scope.editedTodo);
+    console.log($scope.editedTodo);
+    // $scope.originalTodo = angular.extend({}, $scope.editedTodo);
   };
 
   // update todo for changes we made
   $scope.doneEditing = function(todo){
     $scope.editedTodo = null;
     var title = todo.title.trim();
-    if (title) {
+    var duration = todo.duration.trim();
+    console.log(duration)
+    var special = todo.special.trim();
+    if (todo) {
       $scope.todos.$save(todo);
     } else {
       $scope.removeTodo(todo);

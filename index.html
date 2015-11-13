@@ -14,9 +14,23 @@
                 <header>
                     <h1 class='text-center'>What do you have to do?</h1>
                     <span><strong>{{remainingCount}}</strong> things todo</span>
-                    <form ng-submit="addTodo()">
-                        <input class='form-control' placeholder="What needs to be done?" ng-model="newTodo" autofocus>
+                    <form>
+                        <input class='form-control' placeholder="What needs to be done?" ng-model="newTodo.title" autofocus>
+                        <input class='form-control' placeholder="'bout how long do you think it's gonna take you?" ng-model="newTodo.duration" autofocus>
+                        <input class='form-control' placeholder="Special considerations like... need booze? or friends? or ???" ng-model="newTodo.special" autofocus>
+
+                        <label class="checkbox-inline">
+                              <input type="checkbox" ng-model="newTodo.schedule.morning"> Morning
+                        </label>
+                        <label class="checkbox-inline">
+                              <input type="checkbox" ng-model="newTodo.schedule.afternoon"> Afternoon
+                        </label>
+                        <label class="checkbox-inline">
+                              <input type="checkbox" ng-model="newTodo.schedule.night"> Night
+                        </label>
+                        <button ng-click='addTodo()' type="submit" class="btn btn-danger btn-md">Send Away!</button>
                     </form>
+                    <hr>
                 </header>
                 <section ng-show="totalCount" ng-cloak>
                     <!-- Mark all todos as complete -->
@@ -28,15 +42,25 @@
                     <div class="list-group">
                         <div ng-repeat="todo in todos" class="list-group-item" ng-class="{editing: todo == editedTodo}">
                             <div class="view" ng-if='todo !== editedTodo'>
-                                <input type="checkbox" ng-model="todo.completed" ng-change="todos.$save(todo)">
+
 
                                 <label ng-dblclick="editTodo(todo)" ng-if='todo.completed' ng-style="{'text-decoration': 'line-through'}">{{todo.title}}</label>
                                 <label ng-dblclick="editTodo(todo)" ng-if='!todo.completed' ng-style="{'text-decoration': 'none'}">{{todo.title}}</label>
 
                                 <button class='btn btn-danger pull-right' ng-click="removeTodo(todo)">X</button>
+                                <br>
+                                <label ng-dblclick="editTodo(todo)" ng-if='todo.completed' ng-style="{'text-decoration': 'line-through'}">{{todo.duration}}</label>
+                                <label ng-dblclick="editTodo(todo)" ng-if='!todo.completed' ng-style="{'text-decoration': 'none'}">{{todo.duration}}</label>
+                                <br>
+                                <label ng-dblclick="editTodo(todo)" ng-if='todo.completed' ng-style="{'text-decoration': 'line-through'}">{{todo.special}}</label>
+                                <label ng-dblclick="editTodo(todo)" ng-if='!todo.completed' ng-style="{'text-decoration': 'none'}">{{todo.special}}</label>
+                                <label class="pull-right">Done!<input class="checkbox pull-right" type="checkbox" ng-model="todo.completed" ng-change="todos.$save(todo)"></label>
                             </div>
-                            <form ng-submit="doneEditing(todo)" ng-if='todo == editedTodo'>
-                                <input class="edit" ng-model="todo.title" todo-blur="doneEditing(todo)" todo-focus="todo == editedTodo">
+                            <form ng-if='todo == editedTodo'>
+                                <input class="edit" ng-model="todo.title">
+                                <input class="edit" ng-model="todo.duration">
+                                <input class="edit" ng-model="todo.special">
+                                <button class='btn btn-default pull-right' ng-click="doneEditing(todo)">X</button>
                             </form>
                         </div>
                     </div>
